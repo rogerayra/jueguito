@@ -35,6 +35,8 @@ class Board extends GameImage {
   constructor(width, height, img) {
     super(0, 0, width, height, img);
     this.draw();
+
+    this.totalMovement = 0;
   }
 
   draw(character) {
@@ -51,12 +53,11 @@ class Board extends GameImage {
 
   move() {
     this.y++;
-
+    this.totalMovement++;
+    
     if (this.y > canvas.height) {
       this.y = 0;
     }
-
-    return 1;
   }
 }
 
@@ -67,12 +68,12 @@ class Character extends GameImage {
     this.speed = 5;
     this.velX = 0;
     this.velY = 0;
-    this.jumpStrength = 7;
+    this.jumpStrength = 8;
     this.isJumping = false;
-    this.isGrounded = false;   
+    this.isGrounded = false;
+    this.score = 0;
   }
 
-  
 }
 
 class Platform extends GameImage {

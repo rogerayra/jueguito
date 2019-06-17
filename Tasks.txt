@@ -1,26 +1,24 @@
 Basics
 
 
-End game
-
-Scores
-    Count 
-    Show bar with max score
-
 Character 2
 
-Configuration:
-    - One player vs 2 players
-    - ask for names
+
 DESIGN
 
 
 
 Extra:
-Platforms with traction: character moves traction direction
-Platforms moving: up, down, circle?: character stay on top
+
+Configuration:
+    - One player vs 2 players
+    - ask for names
+Show bar with max score
 Enemies shooting
 Weapons
+Platforms with traction: character moves traction direction
+Platforms moving: up, down, circle?: character stay on top
+Platforms timeout
 Bubbles
 Change controls
 Change difficuty:
