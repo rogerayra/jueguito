@@ -1,0 +1,40 @@
+Basics
+
+Generate random Platforms
+    - When character.y < canvas.height / 2
+    - Random size (min && max)
+    - y >= previous platforms
+    - Close enough to the previous Platforms
+
+Collition character platform:
+    - respect limits screen
+    - On top: gravity stop
+    - Else: movement opposite platform
+
+End game
+
+Scores
+    Count 
+    Show bar with max score
+
+Character 2
+
+Configuration:
+    - One player vs 2 players
+    - ask for names
+DESIGN
+
+
+
+Extra:
+Platforms with traction: character moves traction direction
+Platforms moving: up, down, circle?: character stay on top
+Enemies shooting
+Weapons
+Bubbles
+Change controls
+Change difficuty:
+    - Easy: board only moves if character moves
+    - Medium: board moves by itself
+    - Difficult: board moves faster, more enemies
+
