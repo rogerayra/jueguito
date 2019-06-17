@@ -1,15 +1,5 @@
 Basics
 
-Generate random Platforms
-    - When character.y < canvas.height / 2
-    - Random size (min && max)
-    - y >= previous platforms
-    - Close enough to the previous Platforms
-
-Collition character platform:
-    - respect limits screen
-    - On top: gravity stop
-    - Else: movement opposite platform
 
 End game
 

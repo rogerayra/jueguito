@@ -5,74 +5,6 @@ class GameObject {
     this.width = width;
     this.height = height;
   }
-
-  static WillTouchAny(x, y, width, height, listGameObjects) {
-    let auxGameObject = new GameObject(x, y, width, height);
-    let result;
-    listGameObjects.forEach(item => {
-      if (GameObject.IsTouching(auxGameObject, item)) {
-        result = item;
-      }
-    });
-    return result;
-  }
-
-  static IsTouchingAny(gameObject, listGameObjects) {
-    let result = false;
-    listGameObjects.forEach(item => {
-      if (GameObject.IsTouching(gameObject, item)) {
-        result = true;
-      }
-    });
-    return result;
-  }
-
-  static IsTouching(gameObject1, gameObject2) {
-    return (
-      gameObject1.x < gameObject2.x + gameObject2.width &&
-      gameObject1.x + gameObject1.width > gameObject2.x &&
-      gameObject1.y < gameObject2.y + gameObject2.height &&
-      gameObject1.y + gameObject1.height > gameObject2.y
-    );
-  }
-
-  static WillBeOnTopAny(x, currentY, targetY, width, height, listGameObjects) {
-    let result;
-
-    for (let i = currentY; i <= targetY; i++) {
-      let auxGameObject = new GameObject(x, i, width, height);
-
-      listGameObjects.forEach(item => {
-        if (GameObject.IsOnTop(auxGameObject, item)) {
-          result = item;
-        }
-      });
-
-      if (result) {
-        break;
-      }
-    }
-
-    return result;
-  }
-
-  static IsOnTopAny(gameObject, listGameObjects) {
-    let result = false;
-    listGameObjects.forEach(item => {
-      if (GameObject.IsOnTop(gameObject, item)) {
-        result = true;
-      }
-    });
-    return result;
-  }
-
-  static IsOnTop(gameObject1, gameObject2) {
-    return (
-      gameObject1.x + gameObject1.width >= gameObject2.x &&
-      gameObject1.x <= gameObject2.x + gameObject2.width &&
-      gameObject1.y + gameObject1.height === gameObject2.y
-    );
-  }
 }
 
 class GameImage extends GameObject {
@@ -83,6 +15,19 @@ class GameImage extends GameObject {
 
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+}
+
+class Limits extends GameObject{
+  constructor(x, y, width, height, color){
+    super(x, y, width, height);
+
+    this.color = color;
+  }
+
+  draw(){
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 
@@ -119,128 +64,15 @@ class Character extends GameImage {
   constructor(x, y, width, height, img) {
     super(x, y, width, height, img);
 
+    this.speed = 5;
+    this.velX = 0;
+    this.velY = 0;
+    this.jumpStrength = 7;
     this.isJumping = false;
-    this.yJump = 0;
-
-    this.isMovingLeft = false;
-    this.isMovingRight = false;
+    this.isGrounded = false;   
   }
 
-  draw(platforms, speedFactor) {
-    super.draw();
-
-    if (this.isMovingLeft) {
-      let auxGameObject = GameObject.WillTouchAny(
-        this.x - 1,
-        this.y,
-        this.width,
-        this.height,
-        platforms
-      );
-      if (auxGameObject) {
-        this.x = auxGameObject.x + auxGameObject.width + 5;
-        this.isJumping = false;
-      } else {
-        if (this.x - 1 >= 0) {
-          this.x -= 1;
-        }
-      }
-    } else if (this.isMovingRight) {
-      let auxGameObject = GameObject.WillTouchAny(
-        this.x + 1,
-        this.y,
-        this.width,
-        this.height,
-        platforms
-      );
-      if (auxGameObject) {
-        this.x = auxGameObject.x - this.width - 5;
-        this.isJumping = false;
-      } else {
-        if (this.x + this.width + 1 <= canvas.width) {
-          this.x += 1;
-        }
-      }
-    }
-
-    if (this.isJumping) {
-      this.yJump += speedFactor;
-
-      if (this.y - 3 > this.yJump) {
-        let auxGameObject = GameObject.WillTouchAny(
-          this.x,
-          this.y - 4,
-          this.width,
-          this.height,
-          platforms
-        );
-        if (auxGameObject) {
-          this.y = auxGameObject.y + auxGameObject.height;
-          this.isJumping = false;
-        } else {
-          this.y = this.y - 4 - speedFactor;
-        }
-      } else {
-        this.y = this.yJump;
-        this.isJumping = false;
-      }
-    } else {
-      if (!GameObject.IsOnTopAny(this, platforms)) {
-        this.gravity(speedFactor);
-      }
-      // if (!GameObject.IsOnTopAny(this, platforms))
-      //    {
-      //      let aux = GameObject.WillBeOnTopAny(this.x, this.y, this.y + 1 + speedFactor, this.width, this.height, platforms)
-      //      if(aux) {
-      //        this.y = aux.y;
-      //      }
-      //      else {
-      //         this.gravity(speedFactor);
-      // }}
-      // else{
-      //   this.gravity(speedFactor);
-      // }
-    }
-  }
-
-  gravity(speedFactor) {
-    this.y = this.y + 1 + speedFactor;
-  }
-
-  jump() {
-    if (!this.isJumping) {
-      if (GameObject.IsOnTopAny(this, platforms)) {
-        this.yJump = this.y - 100;
-        this.isJumping = true;
-      }
-    }
-  }
-
-  moveLeft() {
-    if (!this.isMovingLeft) {
-      this.isMovingRight = false;
-      this.isMovingLeft = true;
-    }
-  }
-
-  moveRight() {
-    if (!this.isMovingRight) {
-      this.isMovingLeft = false;
-      this.isMovingRight = true;
-    }
-  }
-
-  stopMovingRight() {
-    this.isMovingRight = false;
-  }
-
-  stopMovingLeft() {
-    this.isMovingLeft = false;
-  }
-
-  moveDown() {
-    this.isJumping = false;
-  }
+  
 }
 
 class Platform extends GameImage {
@@ -335,65 +167,6 @@ class Platform extends GameImage {
 
     let plat = new Platform(rndX, rndY, rndWidth, 20, img);
     platforms.push(plat);
-  }
-
-  static GenerateRandom2(platforms, img) {
-    let refY = platforms[platforms.length - 1].y;
-
-    if (refY > 0) {
-      let minYDistance = 70;
-      let minXDistance = 20;
-      let minWidth = 30;
-      let maxWidth = 100;
-      // - When character.y < canvas.height / 2
-      // - Random size (min && max)
-      // - y >= previous platforms
-      // - Close enough to the previous Platforms
-
-      let genLeft = randomIntFromInterval(0, 9) < 5;
-
-      // genLeft = false;
-      let refX;
-      let rndX;
-      if (genLeft) {
-        refX = platforms[platforms.length - 1].x - minXDistance - maxWidth;
-        if (refX < 0) {
-          refX = 0;
-        }
-        rndX = randomIntFromInterval(
-          refX,
-          platforms[platforms.length - 1].width / 2
-        );
-      } else {
-        refX =
-          platforms[platforms.length - 1].x +
-          platforms[platforms.length - 1].width +
-          minXDistance;
-
-        if (refX > canvas.width - 20) {
-          refX = canvas.width - 20;
-        }
-        rndX = randomIntFromInterval(
-          platforms[platforms.length - 1].x +
-            platforms[platforms.length - 1].width / 2,
-          refX
-        );
-      }
-
-      let rndWidth = randomIntFromInterval(minWidth, maxWidth);
-
-      //Calcular y: random entre min(platforms.y) y minYDistancia entre plataformas
-      let rndY = randomIntFromInterval(
-        platforms[platforms.length - 1].y -
-          minYDistance -
-          platforms[platforms.length - 1].height,
-        platforms[platforms.length - 1].y -
-          platforms[platforms.length - 1].height
-      );
-
-      let plat = new Platform(rndX, rndY, rndWidth, 20, img);
-      platforms.push(plat);
-    }
   }
 
   static IsOutLimits(plat) {
