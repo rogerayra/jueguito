@@ -8,11 +8,7 @@ let limits = [];
 let platforms = [];
 let currentPlayers = [];
 let clouds = [];
-// let keys = [];
-// keys[80] = false;
-
 let bullets = [];
-
 let weapons = [];
 
 function startGame() {
@@ -31,7 +27,7 @@ function startGame() {
 
 function stopGame() {
   for (let i = 0; i < currentPlayers.length; i++) {
-    if (currentPlayers[i].char.isAlive) return;
+    if (currentPlayers[i].char.active) return;
   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -63,38 +59,59 @@ function stopGame() {
 }
 
 function update() {
-  // if (!keys[80]) {
+
+  // clean canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ///// DRAW ALL GAME OBJECTS /////
+  //  draw limits . We don't actually see these limits. They are just helping our characters not to get outside the canvas
   limits.forEach(limit => limit.draw());
 
+  //  draw background image
   board.draw();
-  Platform.DrawAll(platforms);
-  // clouds.forEach(cloud => cloud.draw())
 
+  //  draw all the platforms generated so far
+  Platform.DrawAll(platforms);
+
+  //  draw all our characters
   currentPlayers.forEach(player => {
-    if (player.char.isAlive) {
+    if (player.char.active) {
       player.char.draw();
     }
   });
 
+  //  draw all the weapons generated spo far
   weapons.forEach(weapon => {
     if (weapon.active) {
-        weapon.draw();
+      weapon.draw();
     }
-    });
+  });
 
-    bullets.forEach(bullet => {
+  //  draw all the bullets generated so far
+  bullets.forEach(bullet => {
+    bullet.draw();
+  });
 
-            bullet.draw();
+  ///// END: DRAW ALL GAME OBJECTS /////
 
-        });
+  ///// CLEAN ALL GAME OBJECTS NO LONGER INSIDE THE CANVAS /////
 
+  // clean platforms PLATFORMS
   Platform.Clean(platforms);
 
+  // clean weapons
+
+
+  // clean bullets
+
+  ///// END: CLEAN ALL GAME OBJECTS NO LONGER INSIDE THE CANVAS /////
+
+  // generate new platfomrms if needed
   while (platforms[platforms.length - 1].y > 0) {
     Platform.GenerateRandom(platforms, images.platform);
   }
   // writePlatfomsInfo();
+
 
   weapons.forEach(weapon => {
     if (weapon.active) {
@@ -133,21 +150,19 @@ function update() {
   });
 
   bullets.forEach(bullet => {
-      bullet.x += bullet.vectorX;
-      bullet.y += bullet.vectorY;
-  }
-
-  )
+    bullet.x += bullet.vectorX;
+    bullet.y += bullet.vectorY;
+  });
 
   currentPlayers.forEach(player => {
-    if (player.char.isAlive) {
+    if (player.char.active) {
       if (player.char.y <= (2 * canvas.height) / 3) {
         board.move();
         Platform.MoveAll(platforms);
       }
 
       if (player.char.y + player.char.height > canvas.height) {
-        player.char.isAlive = false;
+        player.char.active = false;
         player.char.score = board.totalMovement;
         stopGame();
       }
@@ -177,7 +192,16 @@ function update() {
         player.char.keys[player.controls.shoot] = false;
         let vectorX = player.char.x - (player.char.x + player.char.velX);
         let vectorY = player.char.y - (player.char.y + player.char.velY);
-        bullets.push(new Bullet(player.char.x, player.char.y, 5, vectorX, vectorY, "white"))
+        bullets.push(
+          new Bullet(
+            player.char.x,
+            player.char.y,
+            5,
+            vectorX,
+            vectorY,
+            "#e0dbd1"
+          )
+        );
       }
 
       //jump
@@ -240,38 +264,4 @@ function update() {
   });
 
   frames++;
-  // }
-}
-
-function collisionCheck(char, plat) {
-  const vectorX = char.x + char.width / 2 - (plat.x + plat.width / 2);
-  const vectorY = char.y + char.height / 2 - (plat.y + plat.height / 2);
-
-  const halfWidths = char.width / 2 + plat.width / 2;
-  const halfHeights = char.height / 2 + plat.height / 2;
-
-  let collisionDirection = null;
-
-  if (Math.abs(vectorX) < halfWidths && Math.abs(vectorY) < halfHeights) {
-    var offsetX = halfWidths - Math.abs(vectorX);
-    var offsetY = halfHeights - Math.abs(vectorY);
-    if (offsetX < offsetY) {
-      if (vectorX > 0) {
-        collisionDirection = "left";
-        char.x += offsetX;
-      } else {
-        collisionDirection = "right";
-        char.x -= offsetX;
-      }
-    } else {
-      if (vectorY > 0) {
-        collisionDirection = "top";
-        char.y += offsetY;
-      } else {
-        collisionDirection = "bottom";
-        char.y -= offsetY;
-      }
-    }
-  }
-  return collisionDirection;
 }

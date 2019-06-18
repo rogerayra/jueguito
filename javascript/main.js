@@ -45,9 +45,9 @@ addEventListener("load", () => {
   });
 
   limits.push(
-    new Limits(-1, 0, 0, canvas.height, "black"),
-    new Limits(canvas.width, 0, 0, canvas.height, "black"),
-    new Limits(0, -1, canvas.width, 0, "black")
+    new GameRect(-1, 0, 0, canvas.height, "black"),
+    new GameRect(canvas.width, 0, 0, canvas.height, "black"),
+    new GameRect(0, -1, canvas.width, 0, "black")
   );
 
   images.character1 = loadImage("../images/martona/stickman.png");
