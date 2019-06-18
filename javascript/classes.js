@@ -61,6 +61,12 @@ class Board extends GameImage {
   }
 }
 
+class Cloud extends GameImage{
+  constructor(x, y, width, height, img){
+    super(x, y, width, height, img);
+  }
+}
+
 class Character extends GameImage {
   constructor(x, y, width, height, img, controls, name) {
     super(x, y, width, height, img);
@@ -71,11 +77,11 @@ class Character extends GameImage {
     this.jumpStrength = 8;
     this.isJumping = false;
     this.isGrounded = false;
-    this.score = 0;
     this.controls = controls;
     this.name = name;
     this.isAlive = true;
     this.score = 0;
+    this.armed = false;
   }
 
   keys = [];
@@ -109,7 +115,7 @@ class Platform extends GameImage {
       );
       list.push(platLeft, platRight);
       i++;
-    } while (i < 4);
+    } while (i < 5);
 
     let platMiddle = new Platform(
       i * platWidth + platWidth / 2,
@@ -127,9 +133,9 @@ class Platform extends GameImage {
   }
 
   static GenerateRandom(platforms, img) {
-    let maxXDistance = 20;
+    let maxXDistance = 30;
     let maxYDistance = 70;
-    let minYDistance = 30;
+    let minYDistance = 35;
     let minWidth = 30;
     let maxWidth = 100;
     let prevPlat = platforms[platforms.length - 1];
@@ -171,7 +177,8 @@ class Platform extends GameImage {
       prevPlat.y - 20 - minYDistance
     );
 
-    let plat = new Platform(rndX, rndY, rndWidth, 20, img);
+    // let plat = new Platform(rndX, rndY, rndWidth, 20, img);
+    let plat = new VanishingPlatform(rndX, rndY, rndWidth, 20, img, 10);
     platforms.push(plat);
   }
 
@@ -202,5 +209,113 @@ class Platform extends GameImage {
 
   move() {
     this.y++;
+  }
+}
+
+
+class VanishingPlatform extends Platform{
+  constructor(x, y, width, height, img, timeout){
+    super(x, y, width, height, img, timeout);
+    this.timeout = timeout;
+    this.active = true;
+    this.countdonwOn = false;
+  }
+
+  draw(){
+    if (!this.active) return;
+
+    super.draw();
+    ctx.fillStyle = "red";
+    ctx.font = "15px Arial";
+    ctx.fillText(`${this.timeout} s`, this.x + (this.width / 2)-10, this.y + (this.height / 2) + 30);
+  }
+
+  countdown(){
+    if (this.countdonwOn) return;
+
+    this.countdonwOn = true;
+
+    setInterval(() => {
+      this.timeout--;
+      if (this.timeout <= 0){
+        this.active = false;
+      }
+
+    }, 1000)
+  }
+}
+
+// class MovingPlatform extends Platform{
+//   constructor(x, y, width, height, img, direction, speed, ){
+//     super(x, y, width, height, img, timeout);
+//     this.timeout = timeout;
+//     this.active = true;
+//     this.countdonwOn = false;
+//   }
+
+//   draw(){
+//     if (!this.active) return;
+
+//     super.draw();
+//     ctx.fillStyle = "red";
+//     ctx.font = "15px Arial";
+//     ctx.fillText(`${this.timeout} s`, this.x + (this.width / 2)-10, this.y + (this.height / 2) + 30);
+//   }
+
+//   countdown(){
+//     if (this.countdonwOn) return;
+
+//     this.countdonwOn = true;
+
+//     setInterval(() => {
+//       this.timeout--;
+//       if (this.timeout <= 0){
+//         this.active = false;
+//       }
+
+//     }, 1000)
+//   }
+// }
+
+class Player{
+  constructor(name, char, controls){
+    this.name = name;
+    this.char = char;
+    this.controls = controls;
+    this.maxScore = 0;
+    this.lastScore = 0;
+  }
+}
+
+class Weapon extends GameImage {
+  constructor(x, y, width, height, img){
+    super(x, y, width, height, img);
+
+    this.active = true;
+    this.speed = 5;
+    this.velX = 0;
+    this.velY = 0;
+    this.isGrounded = false;
+  }
+}
+
+class Bullet extends GameObject {
+  constructor(x, y, width, vectorX, vectorY, color){
+    super(x, y, width);
+    this.vectorX = vectorX;
+    this.vectorY = vectorY;
+    this.color = color;
+
+    this.speed = 20;
+    this.velX = 0;
+    this.velY = 0;
+  }
+
+  draw(){
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.width/2, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
   }
 }

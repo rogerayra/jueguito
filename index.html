@@ -9,17 +9,36 @@
   </head>
   <body>
     <div class="container">
-      <div>
-        <button>Start</button>
-        <p>Platforms <span>0</span></p>
-        <ul></ul>
+      
+
+      <div class="config">
+          <label for="singlePlayer">Single player</label>
+          <input type="radio" name="singlePlayer" id="singlePlayer" checked />
+          <label for="twoPlayers">Two players</label>
+          <input type="radio" name="twoPlayers" id="twoPlayers" />
+        <div class="player1">
+          <label for="player1">Player 1</label>
+          <input id="player1" type="text" value="Player 1" />
+        </div>
+
+        <div class="player2">
+          <label for="player2">Player 1</label>
+          <input id="player2" type="text" value="Player 2" />
+        </div>
+
+        <button>Start Game</button>
       </div>
 
-      <canvas width="1000" height="600"></canvas>
+      <div class="game">
+        <p>Platforms <span>0</span></p>
+        <ul></ul>
+        <canvas width="1200" height="800"></canvas>
+      </div>
     </div>
 
     <script src="javascript/classes.js"></script>
     <script src="javascript/helpers.js"></script>
+    <script src="javascript/game.js"></script>
     <script src="javascript/main.js"></script>
   </body>
 </html>

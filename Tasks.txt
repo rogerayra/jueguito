@@ -1,21 +1,15 @@
-Basics
-
-
-Character 2
-
-
-DESIGN
-
-
-
-Extra:
 
 Configuration:
     - One player vs 2 players
     - ask for names
+
 Show bar with max score
 Enemies shooting
 Weapons
+
+Extra:
+
+
 Platforms with traction: character moves traction direction
 Platforms moving: up, down, circle?: character stay on top
 Platforms timeout
@@ -26,3 +20,20 @@ Change difficuty:
     - Medium: board moves by itself
     - Difficult: board moves faster, more enemies
 
+
+
+Art:
+    Background: 
+        Chalkboard: blue (day) / black (night)
+        Moving Yellow sun (day)
+        Moving white clouds (day)
+        Moving white moon (night)
+        Flashing white stars (night)
+    Monitos: stickman/woman:
+            Grounded: normal, left, right
+            Jumping: normal, left, right
+            Falling: normal, left, right
+    Platfoms:
+        Pushpins: normal, traction
+        Erasers: normal, circle
+    

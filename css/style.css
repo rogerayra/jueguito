@@ -10,6 +10,14 @@
     align-content: center;
 }
 
+.config{
+    
+}
+
+.game{
+    display: none;
+}
+
 canvas{
     border: 1px solid aqua;
 }
@@ -17,3 +25,8 @@ canvas{
 button{
     align-self: flex-start;
 }
+
+.player2{
+    display: none;
+}
+
