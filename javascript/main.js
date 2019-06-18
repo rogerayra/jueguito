@@ -12,10 +12,23 @@ let frames = 0;
 let board;
 let limits = [];
 let platforms = [];
-let character1;
-let keys = [];
-keys[80] = false;
+let characters = [];
+// let keys = [];
+// keys[80] = false;
 
+let controls1 = {
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40
+};
+
+let controls2 = {
+  left: 65,
+  up: 87,
+  right: 68,
+  down: 83
+};
 
 function startGame() {
   gameStarted = true;
@@ -27,17 +40,26 @@ function startGame() {
 }
 
 function stopGame() {
+  for (let i = 0; i < characters.length; i++) {
+    if (characters[i].isAlive) return;
+  }
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  let finalScore = board.totalMovement;
   board.draw();
   ctx.fillStyle = "green";
   ctx.font = "30px Arial";
   ctx.fillText("Game Over!!!", canvas.width / 2 - 100, canvas.height / 2);
   ctx.fillText(
-    `Your final score is: ${board.totalMovement}`,
+    `${characters[0].name}: ${characters[0].score}`,
     canvas.width / 2 - 150,
     canvas.height / 2 + 50
+  );
+
+  ctx.fillText(
+    `${characters[1].name}: ${characters[1].score}`,
+    canvas.width / 2 - 150,
+    canvas.height / 2 + 100
   );
 
   clearInterval(interval);
@@ -49,95 +71,125 @@ function stopGame() {
   platforms = [];
   let keys = [];
   keys[80] = false;
-  character1 = new Character(50, canvas.height - 50, 40, 40, images.character1);
+  characters = [];
+  characters.push(
+    new Character(
+      50,
+      canvas.height - 100,
+      40,
+      40,
+      images.character1,
+      controls1,
+      "Pepe"
+    ),
+    new Character(
+      canvas.width - 50,
+      canvas.height - 100,
+      40,
+      40,
+      images.character1,
+      controls2,
+      "Margarita"
+    )
+  );
 }
 
 function update() {
-  if (!keys[80]) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    limits.forEach(limit => limit.draw());
+  // if (!keys[80]) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  limits.forEach(limit => limit.draw());
 
-    board.draw();
-    Platform.DrawAll(platforms);
-    character1.draw();
-    Platform.Clean(platforms);
-
-    while (platforms[platforms.length - 1].y > 0) {
-      Platform.GenerateRandom(platforms, images.platform);
+  board.draw();
+  Platform.DrawAll(platforms);
+  characters.forEach(char => {
+    if (char.isAlive) {
+      char.draw();
     }
-    writePlatfomsInfo();
+  });
+  Platform.Clean(platforms);
 
-    if (character1.y <= (2 * canvas.height) / 3) {
-      board.move();
-      Platform.MoveAll(platforms);
-    }
-
-    if (character1.y + character1.height > canvas.height) {
-      stopGame();
-    }
-
-    //jump
-    if (keys[38] || keys[32]) {
-      if (!character1.jumping) {
-        character1.velY = -character1.jumpStrength * 2;
-        character1.jumping = true;
-      }
-    }
-
-    //movimiento
-    if (keys[39]) {
-      if (character1.velX < character1.speed) {
-        character1.velX++;
-      }
-    }
-
-    if (keys[37]) {
-      if (character1.velX > -character1.speed) {
-        character1.velX--;
-      }
-    }
-
-    //jump
-    character1.y += character1.velY;
-    character1.velY += gravity;
-
-    //movimiento
-    character1.x += character1.velX;
-    character1.velX *= friction;
-
-    // limit collition
-    limits.map(limit => {
-      const direction = collisionCheck(character1, limit);
-      if (direction == "left" || direction == "right") {
-        character1.velX = 0;
-      } else if (direction == "bottom") {
-        character1.jumping = false;
-        character1.grounded = true;
-      } else if (direction == "top") {
-        character1.velY *= -1;
-      }
-    });
-
-    // platform collition
-    character1.grounded = false;
-    platforms.map(platform => {
-      const direction = collisionCheck(character1, platform);
-      if (direction == "left" || direction == "right") {
-        character1.velX = 0;
-      } else if (direction == "bottom") {
-        character1.jumping = false;
-        character1.grounded = true;
-      } else if (direction == "top") {
-        character1.velY *= -1;
-      }
-    });
-
-    if (character1.grounded) {
-      character1.velY = 0;
-    }
-
-    frames++;
+  while (platforms[platforms.length - 1].y > 0) {
+    Platform.GenerateRandom(platforms, images.platform);
   }
+  writePlatfomsInfo();
+
+  characters.forEach(char => {
+    if (char.isAlive) {
+      if (char.y <= (2 * canvas.height) / 3) {
+        board.move();
+        Platform.MoveAll(platforms);
+      }
+
+      if (char.y + char.height > canvas.height) {
+        char.isAlive = false;
+        char.score = board.totalMovement;
+        stopGame();
+      }
+
+      //jump
+      if (char.keys[char.controls.up]) {
+        if (!char.jumping) {
+          char.velY = -char.jumpStrength * 2;
+          char.jumping = true;
+        }
+      }
+
+      //movimiento
+      if (char.keys[char.controls.right]) {
+        if (char.velX < char.speed) {
+          char.velX++;
+        }
+      }
+
+      if (char.keys[char.controls.left]) {
+        if (char.velX > -char.speed) {
+          char.velX--;
+        }
+      }
+
+      //jump
+      char.y += char.velY;
+      char.velY += gravity;
+
+      //movimiento
+      char.x += char.velX;
+      char.velX *= friction;
+
+      // limit collition
+      limits.forEach(limit => {
+        const direction = collisionCheck(char, limit);
+        if (direction == "left" || direction == "right") {
+          char.velX = 0;
+        } else if (direction == "bottom") {
+          char.jumping = false;
+          char.grounded = true;
+        } else if (direction == "top") {
+          char.velY *= -1;
+        }
+      });
+
+      // platform collition
+      char.grounded = false;
+      platforms.forEach(platform => {
+        const direction = collisionCheck(char, platform);
+        if (direction == "left" || direction == "right") {
+          char.velX = 0;
+        } else if (direction == "bottom") {
+          char.jumping = false;
+          char.grounded = true;
+        } else if (direction == "top") {
+          char.velY *= -1;
+        }
+      });
+
+      if (char.grounded) {
+        char.velY = 0;
+      }
+    }
+  });
+
+  frames++;
+  // }
 }
 
 function collisionCheck(char, plat) {
@@ -176,19 +228,22 @@ function collisionCheck(char, plat) {
 document.addEventListener("keydown", e => {
   if (!e.isTrusted) return;
 
-  if (e.keyCode === 80) {
-    keys[80] = !keys[80];
-  } else {
-    //para movimiento
-    keys[e.keyCode] = true;
-  }
+  // if (e.keyCode === 80) {
+  //   keys[80] = !keys[80];
+  // } else {
+  //   //para movimiento
+  //   keys[e.keyCode] = true;
+  // }
+
+  characters.forEach(char => (char.keys[e.keyCode] = true));
 });
 
 document.addEventListener("keyup", e => {
-  if (!e.isTrusted) return;
-  if (e.keyCode !== 80) {
-    keys[e.keyCode] = false;
-  }
+  // if (!e.isTrusted) return;
+  // if (e.keyCode !== 80) {
+  //   keys[e.keyCode] = false;
+  // }
+  characters.forEach(char => (char.keys[e.keyCode] = false));
 });
 
 addEventListener("load", () => {
@@ -205,12 +260,25 @@ addEventListener("load", () => {
 
   images.character1 = loadImage("../images/stickman.png");
   images.character1.addEventListener("load", () => {
-    character1 = new Character(
-      50,
-      canvas.height - 50,
-      40,
-      40,
-      images.character1
+    characters.push(
+      new Character(
+        50,
+        canvas.height - 100,
+        40,
+        40,
+        images.character1,
+        controls1,
+        "Pepe"
+      ),
+      new Character(
+        canvas.width - 50,
+        canvas.height - 100,
+        40,
+        40,
+        images.character1,
+        controls2,
+        "Margarita"
+      )
     );
   });
 
