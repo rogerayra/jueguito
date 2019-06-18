@@ -225,8 +225,8 @@ class VanishingPlatform extends Platform{
     if (!this.active) return;
 
     super.draw();
-    ctx.fillStyle = "red";
-    ctx.font = "15px Arial";
+    ctx.fillStyle = "#e0dbd1";
+    ctx.font = "18px crayon";
     ctx.fillText(`${this.timeout} s`, this.x + (this.width / 2)-10, this.y + (this.height / 2) + 30);
   }
 

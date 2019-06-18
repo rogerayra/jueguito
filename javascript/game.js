@@ -38,7 +38,7 @@ function stopGame() {
 
   board.draw();
   ctx.fillStyle = "green";
-  ctx.font = "30px Arial";
+  ctx.font = "30px crayon";
   ctx.fillText("Game Over!!!", canvas.width / 2 - 100, canvas.height / 2);
 
   let yTextPosition = canvas.height / 2;

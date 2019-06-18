@@ -1,18 +1,19 @@
-
-Configuration:
-    - One player vs 2 players
-    - ask for names
+Rearrange code
+Sprinters
+Change generate random platforms (include VanishingPlatforms)
+Fix stickman shooting
+Clean objects (platforms, weapons, bullets)
+Enemies shooting
 
 Show bar with max score
-Enemies shooting
-Weapons
+
+
 
 Extra:
 
 
 Platforms with traction: character moves traction direction
 Platforms moving: up, down, circle?: character stay on top
-Platforms timeout
 Bubbles
 Change controls
 Change difficuty:
