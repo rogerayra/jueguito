@@ -10,17 +10,33 @@ let currentPlayers = [];
 let clouds = [];
 let bullets = [];
 let weapons = [];
+let enemies = [];
 
 function startGame() {
   gameStarted = true;
   if (interval) return;
 
-  platforms = Platform.GenerateInitial(images.platform);
-  Platform.GenerateRandom(platforms, images.platform);
+  platforms = generateInitialPlatforms();
+  generateRandomPlatforms();
+  weapons.push(
+    new Weapon(
+      randomIntFromInterval(0, canvas.width - 20),
+      0,
+      20,
+      20,
+      images.weapon
+    )
+  );
 
-  //   clouds.push(new Cloud(100, 100, 20, 20, images.cloud), new Cloud(112, 100, 20, 20, images.cloud), new Cloud(124, 100, 20, 20, images.cloud), new Cloud(136, 100, 20, 20, images.cloud))
-
-  weapons.push(new Weapon(400, 0, 20, 20, images.weapon));
+  enemies.push(
+    new Enemy(
+      randomIntFromInterval(0, canvas.width - 40),
+      0,
+      40,
+      80,
+      images.enemy
+    )
+  );
 
   interval = setInterval(update, 1000 / 60);
 }
@@ -33,16 +49,17 @@ function stopGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   board.draw();
-  ctx.fillStyle = "green";
-  ctx.font = "30px crayon";
-  ctx.fillText("Game Over!!!", canvas.width / 2 - 100, canvas.height / 2);
+  ctx.fillStyle = "#e0dbd1";
+  ctx.strokeStyle = "#e0dbd1";
+  ctx.font = "100px crayon";
+  ctx.strokeText("Game Over !!!", canvas.width / 2 - 300, canvas.height / 3);
 
   let yTextPosition = canvas.height / 2;
   currentPlayers.forEach(player => {
-    yTextPosition += 50;
-    ctx.fillText(
-      `${player.name}: ${player.char.score}`,
-      canvas.width / 2 - 150,
+    yTextPosition += 100;
+    ctx.strokeText(
+      `${player.name}: ${player.char.score} points`,
+      canvas.width / 2 - 250,
       yTextPosition
     );
   });
@@ -59,7 +76,6 @@ function stopGame() {
 }
 
 function update() {
-
   // clean canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -70,8 +86,10 @@ function update() {
   //  draw background image
   board.draw();
 
+  clouds.forEach(cloud => cloud.draw());
+
   //  draw all the platforms generated so far
-  Platform.DrawAll(platforms);
+  platforms.forEach(plat => plat.draw());
 
   //  draw all our characters
   currentPlayers.forEach(player => {
@@ -80,10 +98,17 @@ function update() {
     }
   });
 
-  //  draw all the weapons generated spo far
+  //  draw all the weapons generated so far
   weapons.forEach(weapon => {
     if (weapon.active) {
       weapon.draw();
+    }
+  });
+
+  //  draw all the enemies generated so far
+  enemies.forEach(enemy => {
+    if (enemy.active) {
+      enemy.draw();
     }
   });
 
@@ -97,21 +122,107 @@ function update() {
   ///// CLEAN ALL GAME OBJECTS NO LONGER INSIDE THE CANVAS /////
 
   // clean platforms PLATFORMS
-  Platform.Clean(platforms);
+  cleanPlatforms();
 
   // clean weapons
-
+  cleanWeapons();
 
   // clean bullets
+  cleanBullets();
+
+  // clean clouds
+  cleanClouds();
+
+  // clean enemies
+  cleanEnemies();
 
   ///// END: CLEAN ALL GAME OBJECTS NO LONGER INSIDE THE CANVAS /////
 
-  // generate new platfomrms if needed
-  while (platforms[platforms.length - 1].y > 0) {
-    Platform.GenerateRandom(platforms, images.platform);
-  }
-  // writePlatfomsInfo();
+  ///// GENERATE NEW OBJECTS /////
 
+  // generate new platfomrms if needed
+  generateRandomPlatforms();
+
+  // generate new clouds
+  if (frames % 100 === 0) {
+    clouds.push(new Cloud(images.clouds));
+  }
+
+  enemies.forEach(enemy => {
+    if (enemy.active) {
+      if (frames % enemy.shootFreq === 0) {
+        let bullet = new Bullet(enemy.x, enemy.y + 30, 7, "#e0dbd1", enemy);
+        bullet.velX = enemy.shootVelX;
+        bullet.velY = enemy.shootVelY;
+        bullets.push(bullet);
+      }
+    }
+  });
+
+  // generate new weapons
+  if (board.totalMovement > 0 && board.totalMovement % 1000 === 0) {
+    weapons.push(
+      new Weapon(
+        randomIntFromInterval(0, canvas.width - 20),
+        0,
+        20,
+        20,
+        images.weapon
+      )
+    );
+  }
+
+  // generate new enemies
+  if (board.totalMovement > 0 && board.totalMovement % 1200 === 0) {
+    enemies.push(
+      new Enemy(
+        randomIntFromInterval(0, canvas.width - 40),
+        0,
+        40,
+        80,
+        images.enemy
+      )
+    );
+  }
+
+  ///// END GENERATE NEW OBJECTS /////
+
+  enemies.forEach(enemy => {
+    if (enemy.active) {
+      //jump
+      enemy.y += enemy.velY;
+      enemy.velY += gravity;
+
+      //bullet collition
+      bullets.forEach(bullet => {
+        if (enemy !== bullet.shooter) {
+          if (collisionCheck(enemy, bullet)) {
+            enemy.active = false;
+            bullet.active = false;
+          }
+        }
+      });
+
+      // platform collition
+      enemy.isGrounded = false;
+      platforms.forEach(platform => {
+        if (platform.active) {
+          const direction = collisionCheck(enemy, platform);
+          if (direction == "left" || direction == "right") {
+            enemy.velX = 0;
+          } else if (direction == "bottom") {
+            enemy.isGrounded = true;
+          } else if (direction == "top") {
+            enemy.velY *= -1;
+          }
+        }
+      });
+
+      if (enemy.isGrounded) {
+        enemy.velY = 0;
+      }
+    }
+  });
 
   weapons.forEach(weapon => {
     if (weapon.active) {
@@ -120,58 +231,47 @@ function update() {
       weapon.velY += gravity;
 
       // platform collition
-      weapon.grounded = false;
+      weapon.isGrounded = false;
       platforms.forEach(platform => {
-        if (
-          platform.constructor.name === "Platform" ||
-          (platform.constructor.name === "VanishingPlatform" && platform.active)
-        ) {
+        if (platform.active) {
           const direction = collisionCheck(weapon, platform);
           if (direction == "left" || direction == "right") {
             weapon.velX = 0;
           } else if (direction == "bottom") {
-            weapon.grounded = true;
-            if (
-              platform.constructor.name === "VanishingPlatform" &&
-              platform.active
-            ) {
-              platform.countdown();
-            }
+            weapon.isGrounded = true;
           } else if (direction == "top") {
             weapon.velY *= -1;
           }
         }
       });
 
-      if (weapon.grounded) {
+      if (weapon.isGrounded) {
         weapon.velY = 0;
       }
     }
   });
 
   bullets.forEach(bullet => {
-    bullet.x += bullet.vectorX;
-    bullet.y += bullet.vectorY;
+    bullet.x += bullet.velX;
+    bullet.y += bullet.velY;
   });
+
+  clouds.forEach(cloud => cloud.move());
 
   currentPlayers.forEach(player => {
     if (player.char.active) {
       if (player.char.y <= (2 * canvas.height) / 3) {
         board.move();
-        Platform.MoveAll(platforms);
-      }
-
-      if (player.char.y + player.char.height > canvas.height) {
-        player.char.active = false;
-        player.char.score = board.totalMovement;
-        stopGame();
+        platforms.forEach(plat => plat.move());
+        clouds.forEach(cloud => cloud.y++);
+        bullets.forEach(bullet => bullet.y++);
       }
 
       //jump
       if (player.char.keys[player.controls.up]) {
-        if (!player.char.jumping) {
+        if (!player.char.isJumping) {
           player.char.velY = -player.char.jumpStrength * 2;
-          player.char.jumping = true;
+          player.char.isJumping = true;
         }
       }
 
@@ -189,19 +289,37 @@ function update() {
       }
 
       if (player.char.keys[player.controls.shoot]) {
-        player.char.keys[player.controls.shoot] = false;
-        let vectorX = player.char.x - (player.char.x + player.char.velX);
-        let vectorY = player.char.y - (player.char.y + player.char.velY);
-        bullets.push(
-          new Bullet(
+        if (player.char.armed) {
+          player.char.keys[player.controls.shoot] = false;
+
+          let bullet = new Bullet(
             player.char.x,
-            player.char.y,
-            5,
-            vectorX,
-            vectorY,
-            "#e0dbd1"
-          )
-        );
+            player.char.y + 10,
+            7,
+            "#e0dbd1",
+            player.char
+          );
+
+          if (player.char.keys[player.controls.left]) {
+            bullet.velX = -1 * bullet.speed;
+          } else if (player.char.keys[player.controls.right]) {
+            bullet.velX = 1 * bullet.speed;
+          } else {
+            bullet.velX = 0;
+          }
+
+          if (player.char.keys[player.controls.up]) {
+            bullet.velY = -1 * bullet.speed;
+          } else if (player.char.keys[player.controls.down]) {
+            bullet.velY = 1 * bullet.speed;
+          } else {
+            bullet.velY = 0;
+          }
+
+          if (bullet.velX !== 0 || bullet.velY !== 0) {
+            bullets.push(bullet);
+          }
+        }
       }
 
       //jump
@@ -212,19 +330,39 @@ function update() {
       player.char.x += player.char.velX;
       player.char.velX *= friction;
 
+      //bullet collition
+      bullets.forEach(bullet => {
+        if (player.char !== bullet.shooter) {
+          if (collisionCheck(player.char, bullet)) {
+            player.char.active = false;
+            player.char.score = board.totalMovement;
+            stopGame();
+            bullet.active = false;
+          }
+        }
+      });
+
+      // characater falls down -> dead
+      if (player.char.y + player.char.height > canvas.height) {
+        player.char.active = false;
+        player.char.score = board.totalMovement;
+        stopGame();
+      }
+
       // limit collition
       limits.forEach(limit => {
         const direction = collisionCheck(player.char, limit);
         if (direction == "left" || direction == "right") {
           player.char.velX = 0;
         } else if (direction == "bottom") {
-          player.char.jumping = false;
-          player.char.grounded = true;
+          player.char.isJumping = false;
+          player.char.isGrounded = true;
         } else if (direction == "top") {
           player.char.velY *= -1;
         }
       });
 
+      // weapon collition
       weapons.forEach(weapon => {
         if (collisionCheck(player.char, weapon)) {
           player.char.armed = true;
@@ -232,24 +370,32 @@ function update() {
         }
       });
 
+      //enemy collition
+      enemies.forEach(enemy => {
+        if (enemy.active) {
+          const direction = collisionCheck(player.char, enemy);
+          if (direction) {
+            player.char.active = false;
+            player.char.score = board.totalMovement;
+            stopGame();
+          }
+        }
+      });
+
       // platform collition
-      player.char.grounded = false;
+      player.char.isGrounded = false;
       platforms.forEach(platform => {
-        if (
-          platform.constructor.name === "Platform" ||
-          (platform.constructor.name === "VanishingPlatform" && platform.active)
-        ) {
+        if (platform.active) {
           const direction = collisionCheck(player.char, platform);
           if (direction == "left" || direction == "right") {
             player.char.velX = 0;
           } else if (direction == "bottom") {
-            player.char.jumping = false;
-            player.char.grounded = true;
-            if (
-              platform.constructor.name === "VanishingPlatform" &&
-              platform.active
-            ) {
+            player.char.isJumping = false;
+            player.char.isGrounded = true;
+            if (platform.constructor.name === "VanishingPlatform") {
               platform.countdown();
+            } else if (platform.constructor.name === "TractionPlatform") {
+              player.char.x += platform.traction ? 1 : -1;
             }
           } else if (direction == "top") {
             player.char.velY *= -1;
@@ -257,7 +403,7 @@ function update() {
         }
       });
 
-      if (player.char.grounded) {
+      if (player.char.isGrounded) {
         player.char.velY = 0;
       }
     }

@@ -50,15 +50,73 @@ addEventListener("load", () => {
     new GameRect(0, -1, canvas.width, 0, "black")
   );
 
-  images.character1 = loadImage("../images/martona/stickman.png");
+  images.character1 = {
+    grounded: [
+      [
+        loadImage("../images/martona/stickman_walk-left.png"),
+        loadImage("../images/martona/stickman_run-left_1.png"),
+        loadImage("../images/martona/stickman_run-left_2.png")
+      ],
+      loadImage("../images/martona/stickman.png"),
+      [
+        loadImage("../images/martona/stickman_walk-right.png"),
+        loadImage("../images/martona/stickman_run-right_1.png"),
+        loadImage("../images/martona/stickman_run-right_2.png")
+      ]
+    ],
+    jumping: [
+      loadImage("../images/martona/stickman_jump-left.png"),
+      loadImage("../images/martona/stickman_jump.png"),
+      loadImage("../images/martona/stickman_jump-right.png")
+    ],
+    falling: [
+      loadImage("../images/martona/stickman_fall-left.png"),
+      loadImage("../images/martona/stickman.png"),
+      loadImage("../images/martona/stickman_fall-right.png")
+    ]
+  };
 });
 
-images.platform = loadImage("../images/platform.png");
-// images.platform.addEventListener("load", () => {});
+images.character2 = {
+  grounded: [
+    [
+      loadImage("../images/martona/stickgirl_walk-left.png"),
+      loadImage("../images/martona/stickgirl_run-left_1.png"),
+      loadImage("../images/martona/stickgirl_run-left_2.png")
+    ],
+    loadImage("../images/martona/stickgirl.png"),
+    [
+      loadImage("../images/martona/stickgirl_walk-right.png"),
+      loadImage("../images/martona/stickgirl_run-right_1.png"),
+      loadImage("../images/martona/stickgirl_run-right_2.png")
+    ]
+  ],
+  jumping: [
+    loadImage("../images/martona/stickgirl_jump-left.png"),
+    loadImage("../images/martona/stickgirl_jump.png"),
+    loadImage("../images/martona/stickgirl_jump-right.png")
+  ],
+  falling: [
+    loadImage("../images/martona/stickgirl_fall-left.png"),
+    loadImage("../images/martona/stickgirl.png"),
+    loadImage("../images/martona/stickgirl_fall-right.png")
+  ]
+};
 
-images.cloud = loadImage("../images/pushpin.png");
+images.platform = loadImage("../images/martona/eraser.png");
+
+images.clouds = [
+  loadImage("../images/martona/cloud1.png"),
+  loadImage("../images/martona/cloud2.png"),
+  loadImage("../images/martona/cloud3.png"),
+  loadImage("../images/martona/cloud4.png"),
+  loadImage("../images/martona/cloud5.png"),
+  loadImage("../images/martona/cloud6.png")
+];
+images.sun = loadImage("../images/martona/sun.png");
 
 images.weapon = loadImage("../images/martona/gun.png");
+images.enemy = loadImage("../images/flappy.png");
 
 document.querySelector("#twoPlayers").addEventListener("change", e => {
   if (e.target.checked) {
@@ -86,29 +144,43 @@ document.querySelector("button").addEventListener("click", () => {
 
   currentPlayers = [];
 
-    let player1 = new Player(
-      document.querySelector("#player1").value,
-      new Character(50, canvas.height - 100, 30, 50, images.character1),
+  let player1 = new Player(
+    document.querySelector("#player1").value,
+    new Character(
+      50,
+      canvas.height - 100,
+      30,
+      50,
+      images.character1.grounded[1],
+      images.character1.grounded,
+      images.character1.jumping,
+      images.character1.falling,
       controls1
+    ),
+    controls1
+  );
+
+  currentPlayers.push(player1);
+
+  if (document.querySelector("#twoPlayers").checked) {
+    let player2 = new Player(
+      document.querySelector("#player2").value,
+      new Character(
+        canvas.width - 50,
+        canvas.height - 100,
+        30,
+        50,
+        images.character2.grounded[1],
+        images.character2.grounded,
+        images.character2.jumping,
+        images.character2.falling,
+        controls2
+      ),
+      controls2
     );
 
-    currentPlayers.push(player1);
+    currentPlayers.push(player2);
+  }
 
-    if (document.querySelector("#twoPlayers").checked) {
-      let player2 = new Player(
-        document.querySelector("#player2").value,
-        new Character(
-          canvas.width - 50,
-          canvas.height - 100,
-          30,
-          50,
-          images.character1
-        ),
-        controls2
-      );
-
-      currentPlayers.push(player2);
-    }
-
-    startGame();
+  startGame();
 });

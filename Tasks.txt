@@ -1,25 +1,20 @@
-Rearrange code
-Sprinters
-Change generate random platforms (include VanishingPlatforms)
-Fix stickman shooting
-Clean objects (platforms, weapons, bullets)
-Enemies shooting
-
 Show bar with max score
-
-
-
-Extra:
-
-
-Platforms with traction: character moves traction direction
-Platforms moving: up, down, circle?: character stay on top
-Bubbles
 Change controls
 Change difficuty:
     - Easy: board only moves if character moves
     - Medium: board moves by itself
     - Difficult: board moves faster, more enemies
+
+HTML, CSS:
+    Pick a player
+    Show scoreboard
+    Change controls
+
+
+Extra:
+
+Platforms moving: up, down, circle?: character stay on top
+
 
 
 
@@ -30,10 +25,6 @@ Art:
         Moving white clouds (day)
         Moving white moon (night)
         Flashing white stars (night)
-    Monitos: stickman/woman:
-            Grounded: normal, left, right
-            Jumping: normal, left, right
-            Falling: normal, left, right
     Platfoms:
         Pushpins: normal, traction
         Erasers: normal, circle

@@ -24,7 +24,8 @@
 }
 
 canvas{
-    border: 1px solid aqua;
+    border: 30px solid;
+    border-image: url("/images/descarga.jpg") 20% round;
 }
 
 button{

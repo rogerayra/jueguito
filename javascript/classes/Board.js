@@ -29,7 +29,29 @@ class Board extends GameImage {
 }
 
 class Cloud extends GameImage {
-  constructor(x, y, width, height, img) {
-    super(x, y, width, height, img);
+  constructor(images) {
+    let auxWidth = randomIntFromInterval(80, 200);
+    let auxDir = !!randomIntFromInterval(0, 1);
+
+    super(
+      auxDir ? -auxWidth : canvas.width,
+      randomIntFromInterval(-canvas.height, canvas.height/2),
+      auxWidth,
+      randomIntFromInterval(40, 100),
+      images[randomIntFromInterval(0, images.length - 1)]
+    );
+
+    this.dir = auxDir;
+    this.framesRefersh = randomIntFromInterval(2, 7);
+  }
+
+  move() {
+    if (frames % this.framesRefersh === 0) {
+      if (this.dir) {
+        this.x++;
+      } else {
+        this.x--;
+      }
+    }
   }
 }
