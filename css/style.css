@@ -1,38 +1,116 @@
 @font-face {
-    font-family: 'crayon';
-    src: url('../font/DK\ Crayon\ Crumble.ttf');
+  font-family: "crayon";
+  src: url("../font/DK\ Crayon\ Crumble.ttf");
 }
 
 * {
   margin: 0;
   padding: 0;
+  font-family: "crayon";
+  color: #e0dbd1;
+}
+body {
+
 }
 
-.container{
-    width: 100%;
+h1 {
+  font-family: "crayon";
+  text-align: center;
+  font-size: 80px;
+}
+
+.container {
+  margin: 20px auto;
+  width: 1200px;
+  height: 800px;
+  background: url("../images/chalkboard.png");
+  background-position: 0 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  border: solid;
+  border-width: 4vh 2vw;
+  border-image: url("/images/descarga.jpg") 20% round;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+input {
+  border: 1px solid #e0dbd1;
+  background: none;
+}
+
+.name {
     display: flex;
-    justify-content: space-around;
-    align-content: center;
+    flex-direction: row;
 }
 
-.config{
-    
+.vv{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
 }
 
-.game{
-    display: none;
+.game {
+  display: none;
 }
 
-canvas{
-    border: 30px solid;
-    border-image: url("/images/descarga.jpg") 20% round;
+button {
+  align-self: flex-start;
 }
 
-button{
-    align-self: flex-start;
+.player2 {
+  display: none;
 }
 
-.player2{
-    display: none;
+.monitos > img {
+  border: 5px solid;
+  border-image: url("/images/descarga.jpg") 20% round;
 }
 
+.controls {
+  width: 250px;
+  display: flex;
+  align-items: center;
+}
+
+.controls-move {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.controls-move-h {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.key {
+  width: 75px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.key p {
+  text-align: center;
+  width: 100%;
+}
+
+.key p:last-child {
+  height: 65px;
+  width: 100%;
+  font-size: 20px;
+  /* border: 2px solid;
+  border-image: url("/images/descarga.jpg") 20% round; */
+  padding: 10px 5px;
+  box-sizing: border-box;
+}

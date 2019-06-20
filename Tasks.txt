@@ -9,23 +9,6 @@ HTML, CSS:
     Pick a player
     Show scoreboard
     Change controls
+    Pick difficulty
 
-
-Extra:
-
-Platforms moving: up, down, circle?: character stay on top
-
-
-
-
-Art:
-    Background: 
-        Chalkboard: blue (day) / black (night)
-        Moving Yellow sun (day)
-        Moving white clouds (day)
-        Moving white moon (night)
-        Flashing white stars (night)
-    Platfoms:
-        Pushpins: normal, traction
-        Erasers: normal, circle
-    
+  

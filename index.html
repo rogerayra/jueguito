@@ -10,21 +10,92 @@
   <body>
     <div class="container">
       <div class="config">
-        <label for="singlePlayer">Single player</label>
-        <input type="radio" name="singlePlayer" id="singlePlayer" checked />
-        <label for="twoPlayers">Two players</label>
-        <input type="radio" name="twoPlayers" id="twoPlayers" />
-        <div class="player1">
-          <label for="player1">Player 1</label>
-          <input id="player1" type="text" value="Player 1" />
+        <h1>Jueguito</h1>
+        <div class="players">
+          <label for="singlePlayer">Un jugador</label>
+          <input type="radio" name="singlePlayer" id="singlePlayer" checked />
+          <label for="twoPlayers">Dos jugadores</label>
+          <input type="radio" name="twoPlayers" id="twoPlayers" />
+
+          <div class="player1">
+            <div>
+              <label for="player1">Nombre</label>
+              <input id="player1" type="text" value="Jugador 1" />
+            </div>
+
+            <!-- <div class="vv">
+              <div class="monitos">
+                <img id="monito1" src="./images/martona/stickman.png" alt="" />
+                <img id="monita1" src="./images/martona/stickgirl.png" alt="" />
+              </div>
+
+              <div id="controls1" class="controls">
+                <div class="controls-move">
+                  <div class="key">
+                    <p>arriba</p>
+                    <p>flecha<br />arriba</p>
+                  </div>
+                  <div class="controls-move-h">
+                    <div class="key">
+                      <p>izquierda</p>
+                      <p>flecha<br />izq</p>
+                    </div>
+                    <div class="key">
+                      <p>derecha</p>
+                      <p>flecha<br />dcha</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="key">
+                  <p>disparar</p>
+                  <p>retorno</p>
+                </div>
+              </div>
+            </div> -->
+          </div>
+
+          <div class="player2">
+            <div class="name">
+              <div>
+                <label for="player2">Nombre</label>
+                <input id="player2" type="text" value="Jugador 2" />
+              </div>
+              <!-- <div class="monitos">
+                <img id="monito2" src="./images/martona/stickman.png" alt="" />
+                <img id="monita2" src="./images/martona/stickgirl.png" alt="" />
+              </div> -->
+            </div>
+
+            <!-- <div id="controls2" class="controls">
+              <div class="controls-move">
+                <div class="key">
+                  <p>arriba</p>
+                  <p>W</p>
+                </div>
+                <div class="controls-move-h">
+                  <div class="key">
+                    <p>izquierda</p>
+                    <p>A</p>
+                  </div>
+                  <div class="key">
+                    <p>derecha</p>
+                    <p>D</p>
+                  </div>
+                </div>
+              </div>
+              <div class="key">
+                <p>disparar</p>
+                <p>espacio</p>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <div class="scoreboard">
+          <p>Scoreboard</p>
+          <ul></ul>
         </div>
 
-        <div class="player2">
-          <label for="player2">Player 1</label>
-          <input id="player2" type="text" value="Player 2" />
-        </div>
-
-        <button>Start Game</button>
+        <button>¡Jugar!</button>
       </div>
 
       <div class="game">

@@ -3,8 +3,7 @@ class Player {
     this.name = name;
     this.char = char;
     this.controls = controls;
-    this.maxScore = 0;
-    this.lastScore = 0;
+    this.score = 0;
   }
 }
 
@@ -17,7 +16,6 @@ class Character extends GameImage {
     img,
     imgGrounded,
     imgJumping,
-    imgFalling,
     controls
   ) {
     super(x, y, width, height, img);
@@ -25,7 +23,7 @@ class Character extends GameImage {
     this.speed = 5;
     this.velX = 0;
     this.velY = 0;
-    this.jumpStrength = 8;
+    this.jumpStrength = 10;
     this.isJumping = false;
     this.isGrounded = false;
     this.controls = controls;
@@ -34,7 +32,6 @@ class Character extends GameImage {
 
     this.imgGrounded = imgGrounded;
     this.imgJumping = imgJumping;
-    this.imgFalling = imgFalling;
   }
 
   keys = [];

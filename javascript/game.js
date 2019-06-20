@@ -18,25 +18,25 @@ function startGame() {
 
   platforms = generateInitialPlatforms();
   generateRandomPlatforms();
-  weapons.push(
-    new Weapon(
-      randomIntFromInterval(0, canvas.width - 20),
-      0,
-      20,
-      20,
-      images.weapon
-    )
-  );
+  // weapons.push(
+  //   new Weapon(
+  //     randomIntFromInterval(0, canvas.width - 20),
+  //     0,
+  //     20,
+  //     20,
+  //     images.weapon
+  //   )
+  // );
 
-  enemies.push(
-    new Enemy(
-      randomIntFromInterval(0, canvas.width - 40),
-      0,
-      40,
-      80,
-      images.enemy
-    )
-  );
+  // enemies.push(
+  //   new Enemy(
+  //     randomIntFromInterval(0, canvas.width - 40),
+  //     0,
+  //     40,
+  //     80,
+  //     images.enemy
+  //   )
+  // );
 
   interval = setInterval(update, 1000 / 60);
 }
@@ -48,19 +48,56 @@ function stopGame() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  if (players.length > 0) {
+    currentPlayers.forEach(currentPlayer => {
+      players.forEach(player => {
+        if (currentPlayer.name === player.name) {
+          if (currentPlayer.score > player.score) {
+            player.score = currentPlayer.score;
+          }
+        } else {
+          players.push(currentPlayer);
+        }
+      });
+    });
+  } else {
+    currentPlayers.forEach(currentPlayer => players.push(currentPlayer));
+  }
+
+  players
+    .sort((a, b) => {
+      if (a.score < b.score) return -1;
+      else if (a.score > b.score) return 1;
+      return 0;
+    })
+    .reverse();
+
+  updateScoreboard();
+
   board.draw();
   ctx.fillStyle = "#e0dbd1";
   ctx.strokeStyle = "#e0dbd1";
   ctx.font = "100px crayon";
-  ctx.strokeText("Game Over !!!", canvas.width / 2 - 300, canvas.height / 3);
+  ctx.strokeText(
+    "¡¡¡ Fin de partida !!!",
+    canvas.width / 2 - 300,
+    canvas.height / 3
+  );
 
   let yTextPosition = canvas.height / 2;
   currentPlayers.forEach(player => {
     yTextPosition += 100;
     ctx.strokeText(
-      `${player.name}: ${player.char.score} points`,
+      `${player.name}: ${player.score} puntos`,
       canvas.width / 2 - 250,
       yTextPosition
+    );
+
+    ctx.font = "30px crayon";
+    ctx.fillText(
+      "(Presione 'V' para volver al menú)",
+      canvas.width / 2 - 200,
+      canvas.height - 50
     );
   });
 
@@ -70,6 +107,10 @@ function stopGame() {
 
   board.totalMovement = 0;
 
+  clouds = [];
+  bullets = [];
+  enemies = [];
+  weapons = [];
   platforms = [];
   let keys = [];
   keys[80] = false;
@@ -335,9 +376,9 @@ function update() {
         if (player.char !== bullet.shooter) {
           if (collisionCheck(player.char, bullet)) {
             player.char.active = false;
-            player.char.score = board.totalMovement;
-            stopGame();
             bullet.active = false;
+            player.score = board.totalMovement;
+            stopGame();
           }
         }
       });
@@ -345,7 +386,7 @@ function update() {
       // characater falls down -> dead
       if (player.char.y + player.char.height > canvas.height) {
         player.char.active = false;
-        player.char.score = board.totalMovement;
+        player.score = board.totalMovement;
         stopGame();
       }
 
@@ -376,7 +417,7 @@ function update() {
           const direction = collisionCheck(player.char, enemy);
           if (direction) {
             player.char.active = false;
-            player.char.score = board.totalMovement;
+            player.score = board.totalMovement;
             stopGame();
           }
         }

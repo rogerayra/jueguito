@@ -22,11 +22,18 @@ let controls2 = {
   shoot: 32
 };
 
+let players = [];
+
 document.addEventListener("keydown", e => {
   if (!e.isTrusted) return;
 
   if (gameStarted) {
     currentPlayers.forEach(player => (player.char.keys[e.keyCode] = true));
+  } else {
+    if (e.keyCode === 86){
+    document.querySelector(".config").style.display = "inherit";
+    document.querySelector(".game").style.display = "none";
+    }
   }
 });
 
@@ -39,7 +46,7 @@ document.addEventListener("keyup", e => {
 });
 
 addEventListener("load", () => {
-  images.background = loadImage("../images/chalkboard.png");
+  images.background = loadImage("./images/chalkboard.png");
   images.background.addEventListener("load", () => {
     board = new Board(canvas.width, canvas.height, images.background);
   });
@@ -53,70 +60,60 @@ addEventListener("load", () => {
   images.character1 = {
     grounded: [
       [
-        loadImage("../images/martona/stickman_walk-left.png"),
-        loadImage("../images/martona/stickman_run-left_1.png"),
-        loadImage("../images/martona/stickman_run-left_2.png")
+        loadImage("./images/martona/stickman_walk-left.png"),
+        loadImage("./images/martona/stickman_run-left_1.png"),
+        loadImage("./images/martona/stickman_run-left_2.png")
       ],
-      loadImage("../images/martona/stickman.png"),
+      loadImage("./images/martona/stickman.png"),
       [
-        loadImage("../images/martona/stickman_walk-right.png"),
-        loadImage("../images/martona/stickman_run-right_1.png"),
-        loadImage("../images/martona/stickman_run-right_2.png")
+        loadImage("./images/martona/stickman_walk-right.png"),
+        loadImage("./images/martona/stickman_run-right_1.png"),
+        loadImage("./images/martona/stickman_run-right_2.png")
       ]
     ],
     jumping: [
-      loadImage("../images/martona/stickman_jump-left.png"),
-      loadImage("../images/martona/stickman_jump.png"),
-      loadImage("../images/martona/stickman_jump-right.png")
-    ],
-    falling: [
-      loadImage("../images/martona/stickman_fall-left.png"),
-      loadImage("../images/martona/stickman.png"),
-      loadImage("../images/martona/stickman_fall-right.png")
+      loadImage("./images/martona/stickman_jump-left.png"),
+      loadImage("./images/martona/stickman_jump.png"),
+      loadImage("./images/martona/stickman_jump-right.png")
     ]
   };
-});
 
-images.character2 = {
-  grounded: [
-    [
-      loadImage("../images/martona/stickgirl_walk-left.png"),
-      loadImage("../images/martona/stickgirl_run-left_1.png"),
-      loadImage("../images/martona/stickgirl_run-left_2.png")
+  images.character2 = {
+    grounded: [
+      [
+        loadImage("./images/martona/stickgirl_walk-left.png"),
+        loadImage("./images/martona/stickgirl_run-left_1.png"),
+        loadImage("./images/martona/stickgirl_run-left_2.png")
+      ],
+      loadImage("./images/martona/stickgirl.png"),
+      [
+        loadImage("./images/martona/stickgirl_walk-right.png"),
+        loadImage("./images/martona/stickgirl_run-right_1.png"),
+        loadImage("./images/martona/stickgirl_run-right_2.png")
+      ]
     ],
-    loadImage("../images/martona/stickgirl.png"),
-    [
-      loadImage("../images/martona/stickgirl_walk-right.png"),
-      loadImage("../images/martona/stickgirl_run-right_1.png"),
-      loadImage("../images/martona/stickgirl_run-right_2.png")
+    jumping: [
+      loadImage("./images/martona/stickgirl_jump-left.png"),
+      loadImage("./images/martona/stickgirl_jump.png"),
+      loadImage("./images/martona/stickgirl_jump-right.png")
     ]
-  ],
-  jumping: [
-    loadImage("../images/martona/stickgirl_jump-left.png"),
-    loadImage("../images/martona/stickgirl_jump.png"),
-    loadImage("../images/martona/stickgirl_jump-right.png")
-  ],
-  falling: [
-    loadImage("../images/martona/stickgirl_fall-left.png"),
-    loadImage("../images/martona/stickgirl.png"),
-    loadImage("../images/martona/stickgirl_fall-right.png")
-  ]
-};
-
-images.platform = loadImage("../images/martona/eraser.png");
-
-images.clouds = [
-  loadImage("../images/martona/cloud1.png"),
-  loadImage("../images/martona/cloud2.png"),
-  loadImage("../images/martona/cloud3.png"),
-  loadImage("../images/martona/cloud4.png"),
-  loadImage("../images/martona/cloud5.png"),
-  loadImage("../images/martona/cloud6.png")
-];
-images.sun = loadImage("../images/martona/sun.png");
-
-images.weapon = loadImage("../images/martona/gun.png");
-images.enemy = loadImage("../images/flappy.png");
+  };
+  
+  images.platform = loadImage("./images/martona/eraser.png");
+  
+  images.clouds = [
+    loadImage("./images/martona/cloud1.png"),
+    loadImage("./images/martona/cloud2.png"),
+    loadImage("./images/martona/cloud3.png"),
+    loadImage("./images/martona/cloud4.png"),
+    loadImage("./images/martona/cloud5.png"),
+    loadImage("./images/martona/cloud6.png")
+  ];
+  images.sun = loadImage("./images/martona/sun.png");
+  
+  images.weapon = loadImage("./images/martona/gun.png");
+  images.enemy = loadImage("./images/martona/badguy.png");
+});
 
 document.querySelector("#twoPlayers").addEventListener("change", e => {
   if (e.target.checked) {
@@ -149,12 +146,11 @@ document.querySelector("button").addEventListener("click", () => {
     new Character(
       50,
       canvas.height - 100,
-      30,
-      50,
+      40,
+      80,
       images.character1.grounded[1],
       images.character1.grounded,
       images.character1.jumping,
-      images.character1.falling,
       controls1
     ),
     controls1
@@ -168,12 +164,11 @@ document.querySelector("button").addEventListener("click", () => {
       new Character(
         canvas.width - 50,
         canvas.height - 100,
-        30,
-        50,
+        40,
+        80,
         images.character2.grounded[1],
         images.character2.grounded,
         images.character2.jumping,
-        images.character2.falling,
         controls2
       ),
       controls2
@@ -184,3 +179,16 @@ document.querySelector("button").addEventListener("click", () => {
 
   startGame();
 });
+
+let scoreboard = document.querySelector(".scoreboard ul");
+
+function updateScoreboard(){
+  document.querySelectorAll(".scoreboard li").forEach(li => li.parentNode.removeChild(li));
+  
+  players.forEach(player => {
+    let li = document.createElement("li");
+    li.innerText = `${player.name}: ${player.score}`;
+    scoreboard.appendChild(li);
+  })
+ 
+}

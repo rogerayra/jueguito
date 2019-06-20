@@ -90,11 +90,11 @@ function generateInitialPlatforms() {
 }
 
 function generateRandomPlatforms() {
-  let maxXDistance = 50;
-  let minXDistance = 30;
-  let maxYDistance = 70;
-  let minYDistance = 60;
-  let minWidth = 60;
+  let maxXDistance = 70;
+  let minXDistance = 50;
+  let maxYDistance = 120;
+  let minYDistance = 80;
+  let minWidth = 80;
   let maxWidth = 150;
 
   while (platforms[platforms.length - 1].y > 0) {
