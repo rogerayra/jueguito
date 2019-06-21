@@ -43,7 +43,7 @@ input {
 
   border: solid;
   border-width: 4vh 2vw;
-  border-image: url("/images/marco.jpg") 20% round;
+  border-image: url("/images/marco.png") 20% round;
 }
 
 .config {
@@ -52,7 +52,6 @@ input {
   justify-content: center;
   align-content: center;
   width: 100%;
-  /* flex-wrap: wrap; */
 }
 
 .info {
@@ -82,7 +81,6 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* align-items: center; */
   padding: 30px 10px;
   height: 500px;
   width: 40%;
@@ -105,8 +103,6 @@ input {
 }
 
 .monitos > img {
-  
-  /* border-image: url("/images/descarga.jpg") 20% round; */
   width: 50px;
 }
 
