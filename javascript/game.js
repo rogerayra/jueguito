@@ -18,26 +18,7 @@ function startGame() {
 
   platforms = generateInitialPlatforms();
   generateRandomPlatforms();
-  // weapons.push(
-  //   new Weapon(
-  //     randomIntFromInterval(0, canvas.width - 20),
-  //     0,
-  //     20,
-  //     20,
-  //     images.weapon
-  //   )
-  // );
-
-  // enemies.push(
-  //   new Enemy(
-  //     randomIntFromInterval(0, canvas.width - 40),
-  //     0,
-  //     40,
-  //     80,
-  //     images.enemy
-  //   )
-  // );
-
+ 
   interval = setInterval(update, 1000 / 60);
 }
 
@@ -46,19 +27,23 @@ function stopGame() {
     if (currentPlayers[i].char.active) return;
   }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);  
 
   if (players.length > 0) {
     currentPlayers.forEach(currentPlayer => {
-      players.forEach(player => {
-        if (currentPlayer.name === player.name) {
-          if (currentPlayer.score > player.score) {
-            player.score = currentPlayer.score;
+      let exists = false;
+      for (let i = 0; i < players.length; i++) {
+        if (currentPlayer.name === players[i].name) {
+          if (currentPlayer.score > players[i].score) {
+            players[i].score = currentPlayer.score;
           }
-        } else {
-          players.push(currentPlayer);
+          exists = true;
+          break;
         }
-      });
+      }
+      if (!exists) {
+        players.push(currentPlayer);
+      }
     });
   } else {
     currentPlayers.forEach(currentPlayer => players.push(currentPlayer));
@@ -74,6 +59,7 @@ function stopGame() {
 
   updateScoreboard();
 
+  
   board.draw();
   ctx.fillStyle = "#e0dbd1";
   ctx.strokeStyle = "#e0dbd1";
@@ -92,14 +78,14 @@ function stopGame() {
       canvas.width / 2 - 250,
       yTextPosition
     );
-
-    ctx.font = "30px crayon";
-    ctx.fillText(
-      "(Presione 'V' para volver al menú)",
-      canvas.width / 2 - 200,
-      canvas.height - 50
-    );
   });
+
+  ctx.font = "30px crayon";
+  ctx.fillText(
+    "(Presione 'V' para volver al menú)",
+    canvas.width / 2 - 200,
+    canvas.height - 50
+  );
 
   clearInterval(interval);
   interval = false;
@@ -204,8 +190,8 @@ function update() {
   if (board.totalMovement > 0 && board.totalMovement % 1000 === 0) {
     weapons.push(
       new Weapon(
-        randomIntFromInterval(0, canvas.width - 20),
-        0,
+        platforms[platforms.length-1].x + 10,
+        platforms[platforms.length-1].y - 42,
         20,
         20,
         images.weapon
@@ -217,8 +203,8 @@ function update() {
   if (board.totalMovement > 0 && board.totalMovement % 1200 === 0) {
     enemies.push(
       new Enemy(
-        randomIntFromInterval(0, canvas.width - 40),
-        0,
+        platforms[platforms.length-1].x + (platforms[platforms.length-1].width / 2),
+        platforms[platforms.length-1].y - 102,
         40,
         80,
         images.enemy
@@ -320,12 +306,14 @@ function update() {
       if (player.char.keys[player.controls.right]) {
         if (player.char.velX < player.char.speed) {
           player.char.velX++;
+          player.char.lastDirLeft = false;
         }
       }
 
       if (player.char.keys[player.controls.left]) {
         if (player.char.velX > -player.char.speed) {
           player.char.velX--;
+          player.char.lastDirLeft = true;
         }
       }
 
@@ -346,7 +334,13 @@ function update() {
           } else if (player.char.keys[player.controls.right]) {
             bullet.velX = 1 * bullet.speed;
           } else {
-            bullet.velX = 0;
+            if (player.char.lastDirLeft){
+              bullet.velX = -1 * bullet.speed;
+            }
+            else{
+              bullet.velX = 1 * bullet.speed;
+            }
+            // bullet.velX = 0;
           }
 
           if (player.char.keys[player.controls.up]) {
@@ -384,7 +378,7 @@ function update() {
       });
 
       // characater falls down -> dead
-      if (player.char.y + player.char.height > canvas.height) {
+      if (player.char.y  > canvas.height) {
         player.char.active = false;
         player.score = board.totalMovement;
         stopGame();

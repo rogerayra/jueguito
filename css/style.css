@@ -9,20 +9,33 @@
   font-family: "crayon";
   color: #e0dbd1;
 }
-body {
-
-}
 
 h1 {
   font-family: "crayon";
   text-align: center;
   font-size: 80px;
+  width: 100%;
+}
+
+label {
+  font-size: 30px;
+  margin: 0 0 0 30px;
+}
+
+input {
+  border: 1px solid #e0dbd1;
+  background: none;
+  font-size: 30px;
+  padding-left: 10px;
+  width: 200px;
 }
 
 .container {
-  margin: 20px auto;
   width: 1200px;
   height: 800px;
+
+  margin: 20px auto;
+
   background: url("../images/chalkboard.png");
   background-position: 0 0;
   background-size: cover;
@@ -30,56 +43,89 @@ h1 {
 
   border: solid;
   border-width: 4vh 2vw;
-  border-image: url("/images/descarga.jpg") 20% round;
+  border-image: url("/images/marco.jpg") 20% round;
+}
+
+.config {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
+  width: 100%;
+  /* flex-wrap: wrap; */
 }
 
-input {
-  border: 1px solid #e0dbd1;
-  background: none;
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: space-between;
+  width: 100%;
+  height: 600px;
 }
 
-.name {
-    display: flex;
-    flex-direction: row;
+.players-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 80%;
 }
 
-.vv{
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+.players {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.game {
-  display: none;
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* align-items: center; */
+  padding: 30px 10px;
+  height: 500px;
+  width: 40%;
+  box-sizing: border-box;
 }
 
-button {
+#player1 {
+  justify-self: flex-start;
   align-self: flex-start;
 }
 
-.player2 {
+#player2 {
   display: none;
 }
 
+.monitos {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .monitos > img {
-  border: 5px solid;
-  border-image: url("/images/descarga.jpg") 20% round;
+  
+  /* border-image: url("/images/descarga.jpg") 20% round; */
+  width: 50px;
+}
+
+.selected {
+  border: 2px solid green;
 }
 
 .controls {
-  width: 250px;
   display: flex;
+  flex-direction: row;
+  justify-content: space-;
   align-items: center;
 }
 
 .controls-move {
-  width: 100%;
+  width: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -87,7 +133,11 @@ button {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
+}
+
+.shoot {
+  align-self: flex-end;
 }
 
 .key {
@@ -109,8 +159,37 @@ button {
   height: 65px;
   width: 100%;
   font-size: 20px;
-  /* border: 2px solid;
-  border-image: url("/images/descarga.jpg") 20% round; */
+  border: 2px solid #e0dbd1;
   padding: 10px 5px;
   box-sizing: border-box;
+}
+
+.scoreboard {
+  width: 30%;
+  font-size: 50px;
+}
+
+.scoreboard ul,
+.scoreboard li {
+  list-style: none;
+  font-size: 30px;
+}
+
+.name {
+  display: flex;
+  flex-direction: row;
+}
+
+.game {
+  display: none;
+}
+
+button {
+  background: none;
+  border: 2px solid #e0dbd1;
+  width: 100px;
+  height: 60px;
+  font-size: 30px;
+
+  justify-self: center;
 }
