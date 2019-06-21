@@ -109,7 +109,7 @@ addEventListener("load", () => {
     loadImage("./images/cloud5.png"),
     loadImage("./images/cloud6.png")
   ];
-  
+
   images.weapon = loadImage("./images/gun.png");
   images.enemy = loadImage("./images/badguy.png");
 });
@@ -117,26 +117,24 @@ addEventListener("load", () => {
 document.querySelector("#twoPlayers").addEventListener("change", e => {
   if (e.target.checked) {
     document.querySelector("#singlePlayer").checked = false;
-    document.querySelector("#player2").style.display = "inherit";
+    document.querySelector("#player2").classList.toggle("hidden");
   } else {
     document.querySelector("#singlePlayer").checked = true;
-    document.querySelector("#player2").style.display = "none";
+    document.querySelector("#player2").classList.toggle("hidden");
   }
 });
 
 document.querySelector("#singlePlayer").addEventListener("change", e => {
   if (e.target.checked) {
     document.querySelector("#twoPlayers").checked = false;
-    document.querySelector("#player2").style.display = "none";
+    document.querySelector("#player2").classList.toggle("hidden");
   } else {
     document.querySelector("#twoPlayers").checked = true;
-    document.querySelector("#player2").style.display = "inherit";
+    document.querySelector("#player2").classList.toggle("hidden");
   }
 });
 
 document.querySelector("button").addEventListener("click", () => {
-  
-
   currentPlayers = [];
 
   let name1 = document.querySelector("#player1-name").value;
@@ -147,10 +145,9 @@ document.querySelector("button").addEventListener("click", () => {
 
   let images1;
 
-  if (monito1.classList.contains("selected")){
+  if (monito1.classList.contains("selected")) {
     images1 = images.character1;
-  }
-  else{
+  } else {
     images1 = images.character2;
   }
 
@@ -185,10 +182,9 @@ document.querySelector("button").addEventListener("click", () => {
 
     let images2;
 
-    if (monito2.classList.contains("selected")){
+    if (monito2.classList.contains("selected")) {
       images2 = images.character1;
-    }
-    else{
+    } else {
       images2 = images.character2;
     }
 
@@ -234,30 +230,30 @@ let monita1 = document.querySelector("#monita1");
 let monito2 = document.querySelector("#monito2");
 let monita2 = document.querySelector("#monita2");
 
-monito1.addEventListener("click", () =>{
-  if (!monito1.classList.contains("selected")){
+monito1.addEventListener("click", () => {
+  if (!monito1.classList.contains("selected")) {
     monito1.classList.toggle("selected");
     monita1.classList.toggle("selected");
   }
-})
+});
 
-monita1.addEventListener("click", () =>{
-  if (!monita1.classList.contains("selected")){
+monita1.addEventListener("click", () => {
+  if (!monita1.classList.contains("selected")) {
     monito1.classList.toggle("selected");
     monita1.classList.toggle("selected");
   }
-})
+});
 
-monito2.addEventListener("click", () =>{
-  if (!monito2.classList.contains("selected")){
+monito2.addEventListener("click", () => {
+  if (!monito2.classList.contains("selected")) {
     monito2.classList.toggle("selected");
     monita2.classList.toggle("selected");
   }
-})
+});
 
-monita2.addEventListener("click", () =>{
-  if (!monita2.classList.contains("selected")){
+monita2.addEventListener("click", () => {
+  if (!monita2.classList.contains("selected")) {
     monito2.classList.toggle("selected");
     monita2.classList.toggle("selected");
   }
-})
+});

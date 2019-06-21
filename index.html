@@ -14,15 +14,19 @@
         <div class="info">
           <div class="players-info">
             <div class="players-selection">
-              <label for="singlePlayer">Un jugador</label>
-              <input
-                type="radio"
-                name="singlePlayer"
-                id="singlePlayer"
-                checked
-              />
-              <label for="twoPlayers">Dos jugadores</label>
-              <input type="radio" name="twoPlayers" id="twoPlayers" />
+              <div class="singlePlayer">
+                <input
+                  type="radio"
+                  name="singlePlayer"
+                  id="singlePlayer"
+                  checked
+                />
+                <label for="singlePlayer">Un jugador</label>
+              </div>
+              <div class="twoPlayers">
+                <input type="radio" name="twoPlayers" id="twoPlayers" />
+                <label for="twoPlayers">Dos jugadores</label>
+              </div>
             </div>
             <div class="players">
               <div class="player" id="player1">
@@ -43,11 +47,7 @@
                     alt=""
                     class="selected"
                   />
-                  <img
-                    id="monita1"
-                    src="./images/stickgirl.png"
-                    alt=""
-                  />
+                  <img id="monita1" src="./images/stickgirl.png" alt="" />
                 </div>
 
                 <div id="controls1" class="controls">
@@ -74,7 +74,7 @@
                 </div>
               </div>
 
-              <div class="player" id="player2">
+              <div class="player hidden" id="player2">
                 <div>
                   <label for="player2-name">Nombre</label>
                   <input
@@ -86,11 +86,7 @@
                 </div>
 
                 <div class="monitos">
-                  <img
-                    id="monito2"
-                    src="./images/stickman.png"
-                    alt=""
-                  />
+                  <img id="monito2" src="./images/stickman.png" alt="" />
                   <img
                     id="monita2"
                     src="./images/stickgirl.png"
@@ -129,7 +125,7 @@
             <ul></ul>
           </div>
         </div>
-        <div>
+        <div class="play">
           <button>Jugar</button>
         </div>
       </div>

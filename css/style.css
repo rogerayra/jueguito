@@ -15,6 +15,7 @@ h1 {
   text-align: center;
   font-size: 80px;
   width: 100%;
+  margin-bottom: 30px;
 }
 
 label {
@@ -70,6 +71,26 @@ input {
   width: 80%;
 }
 
+.players-selection{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.singlePlayer{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+#singlePlayer{
+  width: 10px;
+}
+#twoPlayers{
+  width: 10px;
+}
+
 .players {
   display: flex;
   flex-direction: row;
@@ -92,8 +113,8 @@ input {
   align-self: flex-start;
 }
 
-#player2 {
-  display: none;
+.hidden {
+  visibility: hidden;
 }
 
 .monitos {
@@ -178,6 +199,12 @@ input {
 
 .game {
   display: none;
+}
+
+.play{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 button {
